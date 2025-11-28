@@ -16,10 +16,13 @@ export function AppHeader({ showUserMenu = false }: AppHeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-primary">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
-        <Link href="/" className="group flex items-center gap-3 transition-opacity hover:opacity-80">
+        <Link href="/" className="group flex items-center gap-3 transition-transform hover:scale-105">
           <div className="flex items-center justify-center">
-            <img src="/fullWhiteLogo.png" alt="ChatHub Logo" className="h-8 dark:block hidden" />
-            <img src="/fullWhiteLogo.png" alt="ChatHub Logo" className="h-8 dark:hidden" />
+            <img 
+              src="/fullWhiteLogo.png" 
+              alt="ChatHub Logo" 
+              className="h-8 brightness-100 contrast-100" 
+            />
           </div>
         </Link>
 

@@ -1,6 +1,7 @@
 import { CreateChatButton } from "@/components/create-chat-button"
 import { AppHeader } from "@/components/app-header"
 import { AppFooter } from "@/components/app-footer"
+import { HeroSection } from "@/components/hero-section"
 import { ServiceCard } from "@/components/service-card"
 import { StatCard } from "@/components/stat-card"
 import { Button } from "@/components/ui/button"
@@ -26,49 +27,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-background flex flex-col">
       <AppHeader showUserMenu={false} />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-muted/30 to-white px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid items-center gap-8 md:gap-12 lg:grid-cols-2">
-            <div className="space-y-6 text-center lg:text-left">
-              <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
-                <span className="text-secondary">GOOD</span>
-                <br />
-                <span className="text-primary">HEALTH</span>
-              </h1>
-              <p className="mx-auto text-lg font-semibold text-foreground sm:text-xl md:text-2xl lg:mx-0">
-                Bienestar mental en la palma de tu mano
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
-                <Button size="lg" className="bg-primary text-white hover:bg-primary/90 min-h-[48px] px-8">
-                  Registrarse
-                </Button>
-                <Button size="lg" className="bg-primary text-white hover:bg-primary/90 min-h-[48px] px-8">
-                  Iniciar sesión
-                </Button>
-              </div>
-            </div>
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative h-64 w-64 sm:h-80 sm:w-80 md:h-96 md:w-96">
-                {/* Outer blue ring */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 p-7 shadow-2xl">
-                  {/* Inner green/teal ring */}
-                  <div className="h-full w-full rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 p-2">
-                    {/* White center circle */}
-                    <div className="flex h-full w-full items-center justify-center rounded-full">
-                      {/* Brain icon container */}
-                      <div className="flex h-full w-full items-center justify-center p-8">
-                        <img src="/tinyLogoWhite.png" alt="ChatHub Logo" className="dark:block hidden" />
-                        <img src="/tinyLogoWhite.png" alt="ChatHub Logo" className="dark:hidden" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Problem Section */}
       <section className="px-4 py-12 sm:px-6 sm:py-16 md:py-20">
