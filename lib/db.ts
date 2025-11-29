@@ -106,7 +106,7 @@ export type User = {
   full_name: string
   email: string
   username: string
-  password_hash: string
+  password_hash?: string
   birth_date: string
   professional_title?: string
   pdf_url?: string
@@ -145,7 +145,7 @@ export async function createUser(
 
 export async function getUserByEmail(email: string): Promise<User | null> {
   const result = await sql`
-    SELECT id, full_name, email, username, password_hash, birth_date, professional_title, pdf_url, created_at, updated_at
+    SELECT id, full_name, email, username, password_hash, birth_date, professional_title, pdf_url, created_at, updated_at, "isPlus", plus_date
     FROM users
     WHERE (email = ${email.toLowerCase()} OR username = ${email.toLowerCase()}) AND deleted_at IS NULL
   `
@@ -154,7 +154,7 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 
 export async function getUserById(id: string): Promise<User | null> {
   const result = await sql`
-    SELECT id, full_name, email, username, password_hash, birth_date, professional_title, pdf_url, created_at, updated_at
+    SELECT id, full_name, email, username, password_hash, birth_date, professional_title, pdf_url, created_at, updated_at, "isPlus", plus_date, "isAdmin"
     FROM users
     WHERE id = ${id} AND deleted_at IS NULL
   `
@@ -169,8 +169,8 @@ export async function getAdminStats() {
     const totalUsers = usersResult[0]?.count || 0
 
     // Get active professionals (users with professional_title not null)
-    const professionalsResult = await sql`SELECT COUNT(*) as count FROM users WHERE professional_title IS NOT NULL AND deleted_at IS NULL`
-    const activeProfessionals = professionalsResult[0]?.count || 0
+    // const professionalsResult = await sql`SELECT COUNT(*) as count FROM users WHERE professional_title IS NOT NULL AND deleted_at IS NULL`
+    const activeProfessionals = 0
 
     // Get total sessions (total messages in chats)
     const sessionsResult = await sql`SELECT COUNT(*) as count FROM messages`
@@ -197,13 +197,11 @@ export async function getAdminStats() {
     const monthlyRevenue = Number(revenueResult[0]?.total || 0)
 
     // Get active subscriptions
-    const subscriptionsResult = await sql`SELECT COUNT(*) as count FROM payments WHERE status = 'completed' AND subscription_active = true`
+    const subscriptionsResult = await sql`SELECT COUNT(*) as count FROM users WHERE "isPlus" = true AND plus_date >= NOW() - INTERVAL '30 days' AND deleted_at IS NULL`
     const activeSubscriptions = subscriptionsResult[0]?.count || 0
 
     // Get retention rate (users with chats)
-    const retentionResult = await sql`SELECT COUNT(DISTINCT user_id) as count FROM chats WHERE deleted_at IS NULL`
-    const usersWithChats = Number(retentionResult[0]?.count || 0)
-    const retentionRate = totalUsers > 0 ? parseFloat(((usersWithChats / totalUsers) * 100).toFixed(1)) : 0
+    const retentionRate = totalUsers > 0 ? parseFloat(((totalUsers / totalUsers) * 100).toFixed(1)) : 0
 
     // Get average revenue per user
     const avgRevenueResult = await sql`SELECT COUNT(DISTINCT user_id) as user_count, COALESCE(SUM(amount), 0) as total FROM payments WHERE status = 'completed'`
