@@ -49,7 +49,7 @@ export function AppHeader({ showUserMenu = false }: AppHeaderProps) {
           ) : (
             <>
               <Link
-                href="/register"
+                href="/signup"
                 className="rounded-lg px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:text-secondary"
               >
                 Registrarse
