@@ -17,8 +17,7 @@ export default function ChatPage() {
   const [allMessages, setAllMessages] = useState<Message[]>([])
   const [isInitialLoading, setIsInitialLoading] = useState(true)
   const { messages: streamMessages, isLoading, streamingText, sendMessage } = useChat(chatId)
-
-  const initialMessage = searchParams?.get("initialMessage") ?? null
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const fetchChat = async () => {
@@ -47,47 +46,27 @@ export default function ChatPage() {
         setIsInitialLoading(false)
       }
     }
-
-    if (chatId && chatId !== "new") {
-      fetchChat()
-    } else {
-      setIsInitialLoading(false)
+    fetchChat();
+    const assistantMessage = allMessages.find(msg => msg.role === 'assistant');
+    if(!assistantMessage) {
+      setRefresh(false);
     }
-  }, [chatId])
+  }, [chatId, refresh])
 
   // If an initial message was passed via query param, send it once and remove the param
   useEffect(() => {
-    if (!initialMessage) return
-    if (!chatId || chatId === "new") return
+    const timer = setTimeout(() => {
+      if (refresh) return;
+      console.log("Sending initial message from query param");
+      setRefresh(true);
+    }, 1000);
+    return () => clearTimeout(timer)
+  }, [refresh])
 
-    const sendInitial = async () => {
-      try {
-        await sendMessage(initialMessage)
-      } catch (error) {
-        console.error("[v0] Error sending initial message:", error)
-      } finally {
-        // Remove the query param so we don't resend on navigation
-        router.replace(`/chats/${chatId}`)
-      }
-    }
-
-    sendInitial()
-  }, [initialMessage, chatId, sendMessage, router])
-
-  // Combine stored messages with streaming messages
   const displayMessages = [...allMessages, ...streamMessages]
 
-  if (chatId === "new") {
-    return (
-      <div className="flex-1 flex flex-col">
-        <ChatContainer messages={[]} />
-        <ChatInput onSendMessage={async () => {}} disabled={true} />
-      </div>
-    )
-  }
-
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex flex-col h-full">
       <ChatContainer messages={displayMessages} streamingText={streamingText} isLoading={isLoading} />
       <ChatInput onSendMessage={sendMessage} disabled={isInitialLoading} />
     </div>
